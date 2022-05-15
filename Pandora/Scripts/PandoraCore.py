@@ -1178,7 +1178,7 @@ class PandoraCore:
     @err_decorator
     def saveScene(self, curfile=None):
         if not curfile:
-        curfile = self.getCurrentFileName()
+            curfile = self.getCurrentFileName()
         filepath = curfile.replace("\\", "/")
 
         outLength = len(filepath)
