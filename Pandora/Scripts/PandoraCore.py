@@ -1170,7 +1170,7 @@ class PandoraCore:
     @err_decorator
     def getCurrentFileName(self, path=True, currentFileName=None):
         if not currentFileName:
-        currentFileName = self.appPlugin.getCurrentFileName(self, path)
+            currentFileName = self.appPlugin.getCurrentFileName(self, path)
         currentFileName = self.fixPath(currentFileName)
 
         return currentFileName
