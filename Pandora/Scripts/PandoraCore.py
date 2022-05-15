@@ -1168,14 +1168,16 @@ class PandoraCore:
         return validText
 
     @err_decorator
-    def getCurrentFileName(self, path=True):
+    def getCurrentFileName(self, path=True, currentFileName=None):
+        if not currentFileName:
         currentFileName = self.appPlugin.getCurrentFileName(self, path)
         currentFileName = self.fixPath(currentFileName)
 
         return currentFileName
 
     @err_decorator
-    def saveScene(self):
+    def saveScene(self, curfile=None):
+        if not curfile:
         curfile = self.getCurrentFileName()
         filepath = curfile.replace("\\", "/")
 
@@ -1376,7 +1378,10 @@ class PandoraCore:
                     "Submission canceled: Pandora submission folder could not be created."
                 )
 
-        fileName = self.getCurrentFileName()
+        if "filename" in jobData:
+            fileName = jobData['filename']
+        else:
+            fileName = self.getCurrentFileName()
         if not os.path.exists(fileName):
             return "Submission canceled: Please save the scene first."
 
@@ -1415,7 +1420,7 @@ class PandoraCore:
             args=[self, os.path.dirname(jobPath)],
         )
 
-        self.saveScene()
+        self.saveScene(fileName)
 
         os.makedirs(jobPath)
 

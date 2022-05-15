@@ -36,7 +36,7 @@ import traceback, time, platform, shutil
 from functools import wraps
 
 
-class Pandora_Maya_externalAccess_Functions(object):
+class Pandora_Python_externalAccess_Functions(object):
     def __init__(self, core, plugin):
         self.core = core
         self.plugin = plugin
@@ -85,30 +85,30 @@ class Pandora_Maya_externalAccess_Functions(object):
             if curFilePath != tFilePath:
                 shutil.copy2(curFilePath, tFilePath)
 
-    # start a Maya render job
+    # start a Python render job
     @err_decorator
     def startJob(self, origin, jobData={}):
-        origin.writeLog("starting maya job. " + jobData["jobname"], 1)
+        origin.writeLog("starting Python job. " + jobData["jobname"], 0)
 
-        mayaOverride = self.core.getConfig("dccoverrides", "Maya_override")
-        mayaOverridePath = self.core.getConfig("dccoverrides", "Maya_path")
+        pythonOverride = self.core.getConfig("dccoverrides", "Python_override")
+        pythonOverridePath = self.core.getConfig("dccoverrides", "Python_path")
 
         if (
-            mayaOverride == True
-            and mayaOverridePath is not None
-            and os.path.exists(mayaOverridePath)
+            pythonOverride == True
+            and pythonOverridePath is not None
+            and os.path.exists(pythonOverridePath)
         ):
-            mayaPath = mayaOverridePath
+            pythonPath = pythonOverridePath
         else:
             if "programVersion" in jobData:
-                mayaPath = self.getInstallPath(jobData["programVersion"])
+                pythonPath = self.getInstallPath(jobData["programVersion"])
             else:
-                mayaPath = self.getInstallPath()
+                pythonPath = self.getInstallPath()
 
-            mayaPath = os.path.join(mayaPath, "bin", "Render.exe")
+            pythonPath = os.path.join(pythonPath,"python.exe")
 
-            if not os.path.exists(mayaPath):
-                origin.writeLog("no Maya installation found", 3)
+            if not os.path.exists(pythonPath):
+                origin.writeLog("no Python installation found", 3)
                 origin.renderingFailed(jobData)
                 return "skipped"
 
@@ -139,27 +139,8 @@ class Pandora_Maya_externalAccess_Functions(object):
             return False
 
         popenArgs = [
-            mayaPath,
-            "-r",
-            "file",
-            "-rd",
-            newOutputDir,
-            "-im",
-            newOutputFile,
-            "-s",
-            str(jobData["taskStartframe"]),
-            "-e",
-            str(jobData["taskEndframe"]),
+            pythonPath
         ]
-
-        if "width" in jobData:
-            popenArgs += ["-x", str(jobData["width"])]
-
-        if "height" in jobData:
-            popenArgs += ["-y", str(jobData["height"])]
-
-        if "camera" in jobData:
-            popenArgs += ["-cam", jobData["camera"]]
 
         popenArgs.append(jobData["scenefile"])
 
