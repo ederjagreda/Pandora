@@ -555,12 +555,14 @@ class SlaveLogic(QDialog):
             value=self.slaveLogicVersion,
         )
 
-        process = os.popen("wmic memorychip get capacity")
+        process = os.popen("wmic memorychip get capacity | findstr [0-9]")
         result = process.read()
         process.close()
-        totalMem = 0
-        for m in result.split("  \r\n")[1:-1]:
-            totalMem += int(m)
+        
+        try:
+            totalMem = int(result.strip())
+        except ValueError:
+            totalMem = 0
 
         self.getConfSetting(
             "ram", section="slaveinfo", setval=True, value=(totalMem // (1024 ** 3))
