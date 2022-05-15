@@ -116,6 +116,14 @@ class Pandora_Python_Integration(object):
                 return (key, _winreg.HKEY_LOCAL_MACHINE)
             except FileNotFoundError:
                 pass
+    
+    @err_decorator
+    def isfloat(self, num):
+        try:
+            float(num)
+            return True
+        except ValueError:
+            return False
 
     @err_decorator
     def getInstallPath(self, version=None):
@@ -132,6 +140,8 @@ class Pandora_Python_Integration(object):
                         umv = unicode(pythonVers)
                     else:
                         umv = pythonVers
+                    if self.isfloat(umv):
+                        pythonVersions.append(pythonVers)
                     i += 1
             except WindowsError:
                 pass
