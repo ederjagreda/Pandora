@@ -144,5 +144,5 @@ class Pandora_Python_externalAccess_Functions(object):
 
         popenArgs.append(jobData["scenefile"])
 
-        thread = origin.startRenderThread(pOpenArgs=popenArgs, jData=jobData, prog="maya")
+        thread = origin.startRenderThread(pOpenArgs=popenArgs, jData=jobData, prog="python")
         return thread

@@ -524,6 +524,28 @@ class PandoraCore:
         webbrowser.open(url)
 
     @err_decorator
+    def openPythonSubmitter(self):
+        if hasattr(self, "pss") and self.pps.isVisible():
+            self.pps.close()
+
+        try:
+            del sys.modules["PandoraPythonSubmitter"]
+        except:
+            pass
+
+        try:
+            import PandoraPythonSubmitter
+        except:
+            modPath = imp.find_module("PandoraPythonSubmitter")[1]
+            if modPath.endswith(".pyc") and os.path.exists(modPath[:-1]):
+                os.remove(modPath)
+            import PandoraPythonSubmitter
+        
+        self.pps = PandoraPythonSubmitter.PandoraPythonSubmitter(core=self)
+        self.pps.show()
+
+
+    @err_decorator
     def openSubmitter(self):
         if hasattr(self, "ps") and self.ps.isVisible():
             self.ps.close()

@@ -1736,7 +1736,9 @@ class SlaveLogic(QDialog):
                 rethread = threading.Thread(target=readStderr, args=(jobData, prog, decode))
                 rethread.start()
 
-                jobData["renderProc"].wait()
+                rothread.join()
+                rethread.join()
+                # jobData["renderProc"].wait()
                 #   self.writeLog(jobData["renderProc"].communicate()[0].decode('utf-16'))
                 self.finishedJob(jobData)
                 return
@@ -1758,6 +1760,7 @@ class SlaveLogic(QDialog):
     # called when a renderjob is finished. Evaluates the result.
     @err_decorator
     def finishedJob(self, task):
+        program = task['program']
         if self.localMode:
             basePath = task["outputFolder"]
         else:
@@ -1777,6 +1780,9 @@ class SlaveLogic(QDialog):
                 fileNum += 1
 
         if fileNum > task["existingOutputFileNum"]:
+            hasNewOutput = True
+
+        if program == "Python":
             hasNewOutput = True
 
         if self.interrupted:
@@ -1869,21 +1875,23 @@ class SlaveLogic(QDialog):
                 taskResult = "completed"
 
                 outputNum = 0
-                for i in os.walk(syncPath):
-                    outputNum += len(i[2])
 
-                    for k in i[2]:
-                        if os.path.splitext(k)[1] not in [
-                            ".exr",
-                            "jpg",
-                            ".png",
-                            ".bgeo",
-                            ".abc",
-                            ".tif",
-                            ".tiff",
-                            ".tga",
-                        ]:
-                            self.writeLog("unknown fileoutput type: %s" % (k), 2)
+                if program not in ['Python']:
+                    for i in os.walk(syncPath):
+                        outputNum += len(i[2])
+
+                        for k in i[2]:
+                            if os.path.splitext(k)[1] not in [
+                                ".exr",
+                                "jpg",
+                                ".png",
+                                ".bgeo",
+                                ".abc",
+                                ".tif",
+                                ".tiff",
+                                ".tga",
+                            ]:
+                                self.writeLog("unknown fileoutput type: %s" % (k), 2)
 
             cmd = [
                 "taskUpdate",

@@ -1,1 +1,4 @@
 *.pyc
+/Pandora/PythonLibs
+/Pandora/Python37
+/Pandora/Tools

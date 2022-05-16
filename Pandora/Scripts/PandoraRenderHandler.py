@@ -239,8 +239,18 @@ class RenderHandler(QMainWindow, RenderHandler_ui.Ui_mw_RenderHandler):
             self.actionAbout.triggered.connect(self.core.showAbout)
             helpMenu.addAction(self.actionAbout)
 
-            self.menubar.addMenu(helpMenu)
 
+            submitMenu = QMenu("Submit")
+            
+            self.actionPython = QAction("Python Job", self)
+            self.actionPython.triggered.connect(self.core.openPythonSubmitter)
+
+            submitMenu.addAction(self.actionPython)
+
+            self.menubar.addMenu(submitMenu)
+            self.menubar.addMenu(helpMenu)
+            
+            getattr(self.core.appPlugin, "setRCStyle", lambda x, y: None)(self, submitMenu)
             getattr(self.core.appPlugin, "setRCStyle", lambda x, y: None)(self, helpMenu)
 
             self.tw_jobs.setColumnCount(10)

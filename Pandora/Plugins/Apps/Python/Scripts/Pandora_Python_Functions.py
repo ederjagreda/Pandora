@@ -104,8 +104,6 @@ class Pandora_Python_Functions(object):
 
     @err_decorator
     def getCurrentFileName(self, origin, path=True):
-        print "origin", origin
-        print dir(origin)
         if path:
             return path
 
