@@ -88,7 +88,7 @@ class Pandora_Maya_externalAccess_Functions(object):
     # start a Maya render job
     @err_decorator
     def startJob(self, origin, jobData={}):
-        origin.writeLog("starting maya job. " + jobData["jobname"], 1)
+        origin.writeLog("starting maya job. " + jobData["jobname"], 0)
 
         mayaOverride = self.core.getConfig("dccoverrides", "Maya_override")
         mayaOverridePath = self.core.getConfig("dccoverrides", "Maya_path")
